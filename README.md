@@ -1,4 +1,6 @@
 follow-the-leader-8-
 ====================
 
-Final Project for Database Course. Automating a form fill out process for the Computer Science Department at the University of Puerto Rico, Rio Piedras Campus
+Final Project for Database Course. Automating a form fill out process for the Computer Science Department at the University of Puerto Rico, Rio Piedras Campus.
+
+This was a team project by @elbuo8, @chrisrodz and @makobi

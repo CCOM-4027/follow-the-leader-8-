@@ -3,11 +3,21 @@ from ccomforms.models import T02, A125, Profile
 from django import forms
 
 '''
+In these Model Forms, since I know how many fields I'll be storing in the
+PostgreSQL array I add temporary fields to present that data to the user 
+as separate fields. I then join the data in all these fields into one single
+array.
+'''
+
+
+
+'''
 Model Form for the Professor's Profile
 '''
 
 class ProfileForm(forms.ModelForm):
 
+    ''' Add temporary fields for array values '''
     Facultad_1 = forms.CharField(max_length=100)
     NumPlaza_1 = forms.CharField(max_length=100)
     Titulo_Rango_1 = forms.CharField(max_length=100)
@@ -19,6 +29,7 @@ class ProfileForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
+        # Change the order of the form inputs for easier styling
         self.fields.keyOrder = [
         'professor',
         'Facultad',
@@ -33,6 +44,7 @@ class ProfileForm(forms.ModelForm):
         'SueldoTotal_1',
         ]
 
+    ''' Function that displays ArrayFields as separate input boxes '''
     def fix_instance(self):
         data10 = ",".join([str(x) for x in self.initial['Facultad']])
         data10 = data10.split(',')
@@ -59,6 +71,7 @@ class ProfileForm(forms.ModelForm):
         self.initial['SueldoTotal'] = data14[0]
         self.initial['SueldoTotal_1'] = data14[1]
 
+    ''' Clean is used to group the array data form temporary fields into one input variable '''
     def clean(self):
         self.cleaned_data['Facultad'] = [self.cleaned_data['Facultad'],self.cleaned_data['Facultad_1']]
         self.cleaned_data['NumPlaza'] = [self.cleaned_data['NumPlaza'],self.cleaned_data['NumPlaza_1']]
@@ -69,9 +82,7 @@ class ProfileForm(forms.ModelForm):
         return self.cleaned_data
 
 '''
-Add temporary form fields for each element in model array fields.
-Render the array fields as separate input fields in the html.
-Join these separate input fields before the form saves itself.
+Model Form for the T02 Model.
 '''
 class T02Form(forms.ModelForm):
 
@@ -145,7 +156,7 @@ class T02Form(forms.ModelForm):
         'f30',
             ]
 
-    # Magic function that displays ArrayFields as separate input boxes
+    ''' Function that displays ArrayFields as separate input boxes '''
     def fix_instance(self):
         data10 = ",".join([str(x) for x in self.initial['f10']])
         data10 = data10.split(',')
@@ -232,7 +243,7 @@ class T02Form(forms.ModelForm):
         self.initial['f27_2'] = data27[2]
         self.initial['f27_3'] = data27[3]
 
-    # I use clean to group the array data into one input variable
+    ''' Clean is used to group the array data form temporary fields into one input variable '''
     def clean(self):
         self.cleaned_data['f10'] = [self.cleaned_data['f10'],self.cleaned_data['f10_1']]
         self.cleaned_data['f11'] = [self.cleaned_data['f11'],self.cleaned_data['f11_1']]
@@ -252,9 +263,7 @@ class T02Form(forms.ModelForm):
         return self.cleaned_data
 
 '''
-Add temporary form fields for each element in model array fields.
-Render the array fields as separate input fields in the html.
-Join these separate input fields before the form saves itself.
+Model Form for the A125 Model
 '''
 
 class A125Form(forms.ModelForm):
@@ -354,7 +363,7 @@ class A125Form(forms.ModelForm):
         'comments',
         ]
 
-    # Magic function that fixes how ArrayFields are displayed
+    ''' Function that displays ArrayFields as separate input boxes '''
     def fix_instance(self):
         sponsored = ",".join([str(x) for x in self.initial['sponsored_accounts']])
         sponsored = sponsored.split(',')
@@ -442,6 +451,7 @@ class A125Form(forms.ModelForm):
         self.initial['payments_paid_7'] = payments[7]
         self.initial['payments_paid_8'] = payments[8]
 
+    ''' Clean is used to group the array data form temporary fields into one input variable '''
     def clean(self):
         self.cleaned_data['sponsored_accounts'] = [self.cleaned_data['sponsored_accounts']
         ,self.cleaned_data['sponsored_accounts_1']

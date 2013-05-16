@@ -5,7 +5,8 @@ from djorm_expressions.models import ExpressionManager
 
 '''
 Model for Professor's Profile.
-This data will be used for generating the forms.
+This data will be used for generating the T02 form
+and ease the load on the person filling it out.
 '''
 class Profile(models.Model):
 

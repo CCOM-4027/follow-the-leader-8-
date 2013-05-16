@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect
 from django.core import serializers
 from django.shortcuts import render_to_response
 from ccomforms.models import T02, A125, Profile
@@ -22,20 +22,6 @@ def createa125(request, document_root, obj):
 	generator.buildPDF(data, document_root)
 	return HttpResponseRedirect('/media/a125-gen.pdf')
 
-# TEST VIEW, NOT USED IN PROJECT
-@login_required
-def pdfform(request):
-	me = T02.objects.get(id=1)
-	if request.method != 'POST':
-		p = T02Form(instance=me)
-		p.fix_instance()
-		return render_to_response('pdfform.html', {'form': p}, context_instance=RequestContext(request))
-	else:
-		form = T02Form(request.POST, instance=me)
-		if form.is_valid():
-			pdf = form.save()
-			return HttpResponseRedirect('/')
-
 # View for rendering the professor's profile
 @login_required
 def profile(request):
@@ -43,14 +29,15 @@ def profile(request):
 	a125s = A125.objects.filter(professor=request.user)
 	return render_to_response('profile.html', {'t02s': t02s, 'a125s': a125s})
 
-# View for rendering the professor's history
+# View for rendering the professor's history of filled out forms
 @login_required
 def history(request):
 	t02s = T02.objects.filter(professor=request.user)
 	a125s = A125.objects.filter(professor=request.user)
 	return render_to_response('history.html', {'t02s': t02s, 'a125s': a125s})
 
-# View for editing professor's profile information
+# View for editing professor's profile information, the view renders differently
+# if it's the first time the professor tries to fill it out
 @login_required
 def editprofile(request):
 	current = Profile.objects.filter(professor=request.user)
